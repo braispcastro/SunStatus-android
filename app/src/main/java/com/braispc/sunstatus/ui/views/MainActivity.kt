@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        imgSun = findViewById<ImageView>(R.id.imgSun)
+        imgSun = findViewById(R.id.imgSun)
     }
 
     override fun onResume() {
