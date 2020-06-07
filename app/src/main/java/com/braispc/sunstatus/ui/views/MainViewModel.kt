@@ -1,7 +1,8 @@
 package com.braispc.sunstatus.ui.views
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
-open class MainViewModel: ViewModel() {
+open class MainViewModel(application: Application): AndroidViewModel(application) {
 
 }
