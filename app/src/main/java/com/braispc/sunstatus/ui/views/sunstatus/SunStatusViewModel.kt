@@ -23,7 +23,7 @@ class SunStatusViewModel(application: Application): MainViewModel(application) {
 
     init {
 
-        locationText.value = "A Veiga, Galicia, Spain"
+        locationText.value = "-"
         latitudeText.value = "-"
         longitudeText.value = "-"
         sunFirstText.value = "-"

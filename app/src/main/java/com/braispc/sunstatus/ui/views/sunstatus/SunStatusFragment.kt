@@ -13,9 +13,10 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.navGraphViewModels
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager
 import com.braispc.sunstatus.R
 import com.braispc.sunstatus.common.Constants
 import com.braispc.sunstatus.common.Constants.Companion.GPS_REQUEST
@@ -23,9 +24,9 @@ import com.braispc.sunstatus.common.Constants.Companion.LOCATION_REQUEST
 import com.braispc.sunstatus.core.GpsUtils
 import com.braispc.sunstatus.databinding.SunStatusFragmentBinding
 import com.braispc.sunstatus.ui.views.BaseFragment
-import com.squareup.picasso.MemoryPolicy
-import com.squareup.picasso.NetworkPolicy
-import com.squareup.picasso.Picasso
+import com.braispc.sunstatus.ui.views.adapters.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
+
 
 class SunStatusFragment: BaseFragment() {
 
@@ -33,6 +34,7 @@ class SunStatusFragment: BaseFragment() {
         fun newInstance() = SunStatusFragment()
     }
 
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var imgSun: ImageView
     private lateinit var binding: SunStatusFragmentBinding
     private val viewModel: SunStatusViewModel by navGraphViewModels(R.id.sunStatusFragment)
@@ -49,14 +51,24 @@ class SunStatusFragment: BaseFragment() {
             }
         })
 
-        imgSun = (activity as AppCompatActivity).findViewById(R.id.imgSun)
-        Picasso.get()
-            .load(Constants.SUN_URL)
-            .networkPolicy(NetworkPolicy.NO_CACHE)
-            .memoryPolicy(MemoryPolicy.NO_CACHE)
-            .centerInside()
-            .fit()
-            .into(imgSun)
+        swipeToRefresh = (activity as AppCompatActivity).findViewById(R.id.swipeToRefresh)
+        swipeToRefresh.setOnRefreshListener {
+            invokeLocationAction()
+            swipeToRefresh.isRefreshing = false
+        }
+
+        val imageUrls = arrayOf(
+            Constants.URL_SUN_HMIIC,
+            Constants.URL_SUN_HMIIB_AIA171,
+            Constants.URL_SUN_AIA304
+        )
+
+        val viewPager = (activity as AppCompatActivity).findViewById<ViewPager>(R.id.viewPager)
+        val adapter = ViewPagerAdapter((activity as AppCompatActivity).baseContext, imageUrls)
+        viewPager.adapter = adapter
+
+        val tabLayout = (activity as AppCompatActivity).findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout.setupWithViewPager(viewPager, true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -66,7 +78,7 @@ class SunStatusFragment: BaseFragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.sun_status_fragment, container, false)
 
-        // com.braispc.sunstatus.model.Properties
+        //Properties
 
         viewModel.locationText.observe(viewLifecycleOwner, Observer { x ->
             binding.tvLocation.text = x
@@ -95,8 +107,6 @@ class SunStatusFragment: BaseFragment() {
         viewModel.sunSecondImage.observe(viewLifecycleOwner, Observer { x ->
             binding.imgSunSecond.setDrawableName(x)
         })
-
-        binding.imgSun.setOnClickListener { invokeLocationAction() }
 
         return binding.root
     }
