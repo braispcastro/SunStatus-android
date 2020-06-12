@@ -61,6 +61,8 @@ class SunStatusFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        viewModel.apiKey = getString(R.string.meteoSixApi)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.sun_status_fragment, container, false)
 
         // Properties
