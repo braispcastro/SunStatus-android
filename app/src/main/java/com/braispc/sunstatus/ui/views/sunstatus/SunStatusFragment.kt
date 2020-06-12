@@ -59,6 +59,7 @@ class SunStatusFragment: BaseFragment() {
 
         val imageUrls = arrayOf(
             Constants.URL_SUN_HMIIC,
+            Constants.URL_SUN_HMIIB_AIA171,
             Constants.URL_SUN_AIA304
         )
 
