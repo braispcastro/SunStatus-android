@@ -66,6 +66,7 @@ class SunStatusFragment: Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.sun_status_fragment, container, false)
 
         // Properties
+
         viewModel.locationText.observe(viewLifecycleOwner, Observer { x ->
             binding.tvLocation.text = x
         })
@@ -85,6 +86,8 @@ class SunStatusFragment: Fragment() {
         viewModel.sunriseText.observe(viewLifecycleOwner, Observer { x ->
             binding.tvSunrise.text = x
         })
+
+        binding.imgSun.setOnClickListener { invokeLocationAction() }
 
         return binding.root
     }
@@ -106,7 +109,6 @@ class SunStatusFragment: Fragment() {
 
     private fun invokeLocationAction() {
         when {
-            //!isGPSEnabled -> latLong.text = getString(R.string.enable_gps)
 
             isPermissionsGranted() -> startLocationUpdate()
 
