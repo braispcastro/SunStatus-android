@@ -1,3 +1,5 @@
+package com.braispc.sunstatus.model
+
 data class SunModel (
 
 	val type : String,

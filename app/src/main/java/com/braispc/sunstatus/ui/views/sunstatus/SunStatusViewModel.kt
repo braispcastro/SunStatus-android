@@ -16,16 +16,18 @@ class SunStatusViewModel(application: Application): MainViewModel(application) {
     var locationText: MutableLiveData<String> = MutableLiveData()
     var latitudeText: MutableLiveData<String> = MutableLiveData()
     var longitudeText: MutableLiveData<String> = MutableLiveData()
-    var sunriseText: MutableLiveData<String> = MutableLiveData()
-    var sunsetText: MutableLiveData<String> = MutableLiveData()
+    var sunFirstText: MutableLiveData<String> = MutableLiveData()
+    var sunFirstImage: MutableLiveData<String> = MutableLiveData()
+    var sunSecondText: MutableLiveData<String> = MutableLiveData()
+    var sunSecondImage: MutableLiveData<String> = MutableLiveData()
 
     init {
 
         locationText.value = "A Veiga, Galicia, Spain"
         latitudeText.value = "-"
         longitudeText.value = "-"
-        sunriseText.value = "-"
-        sunsetText.value = "-"
+        sunFirstText.value = "-"
+        sunSecondText.value = "-"
     }
 
     fun getLocationData() = locationData
@@ -35,7 +37,9 @@ class SunStatusViewModel(application: Application): MainViewModel(application) {
         longitudeText.value = locationData.value?.longitude.toString()
 
         var sunStatus = sunUtils.getNextSunriseAndSunset(latitudeText.value.toString(), longitudeText.value.toString(), apiKey)
-        sunriseText.value = sunStatus.nextSunrise
-        sunsetText.value = sunStatus.nextSunset
+        sunFirstText.value = sunStatus.nextSunFirst
+        sunSecondText.value = sunStatus.nextSunSecond
+        sunFirstImage.value = if (sunStatus.isSunriseFirst) "ic_sunrise" else "ic_sunset"
+        sunSecondImage.value = if (sunStatus.isSunriseFirst) "ic_sunset" else "ic_sunrise"
     }
 }

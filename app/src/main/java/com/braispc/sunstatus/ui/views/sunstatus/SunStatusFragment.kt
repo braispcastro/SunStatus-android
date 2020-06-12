@@ -22,11 +22,12 @@ import com.braispc.sunstatus.common.Constants.Companion.GPS_REQUEST
 import com.braispc.sunstatus.common.Constants.Companion.LOCATION_REQUEST
 import com.braispc.sunstatus.core.GpsUtils
 import com.braispc.sunstatus.databinding.SunStatusFragmentBinding
+import com.braispc.sunstatus.ui.views.BaseFragment
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 
-class SunStatusFragment: Fragment() {
+class SunStatusFragment: BaseFragment() {
 
     companion object {
         fun newInstance() = SunStatusFragment()
@@ -65,7 +66,8 @@ class SunStatusFragment: Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.sun_status_fragment, container, false)
 
-        // Properties
+        // com.braispc.sunstatus.model.Properties
+
         viewModel.locationText.observe(viewLifecycleOwner, Observer { x ->
             binding.tvLocation.text = x
         })
@@ -78,13 +80,23 @@ class SunStatusFragment: Fragment() {
             binding.tvLongitude.text = x
         })
 
-        viewModel.sunsetText.observe(viewLifecycleOwner, Observer { x ->
-            binding.tvSunset.text = x
+        viewModel.sunFirstText.observe(viewLifecycleOwner, Observer { x ->
+            binding.tvSunFirst.text = x
         })
 
-        viewModel.sunriseText.observe(viewLifecycleOwner, Observer { x ->
-            binding.tvSunrise.text = x
+        viewModel.sunFirstImage.observe(viewLifecycleOwner, Observer { x ->
+            binding.imgSunFirst.setDrawableName(x)
         })
+
+        viewModel.sunSecondText.observe(viewLifecycleOwner, Observer { x ->
+            binding.tvSunSecond.text = x
+        })
+
+        viewModel.sunSecondImage.observe(viewLifecycleOwner, Observer { x ->
+            binding.imgSunSecond.setDrawableName(x)
+        })
+
+        binding.imgSun.setOnClickListener { invokeLocationAction() }
 
         return binding.root
     }
@@ -106,7 +118,6 @@ class SunStatusFragment: Fragment() {
 
     private fun invokeLocationAction() {
         when {
-            //!isGPSEnabled -> latLong.text = getString(R.string.enable_gps)
 
             isPermissionsGranted() -> startLocationUpdate()
 
