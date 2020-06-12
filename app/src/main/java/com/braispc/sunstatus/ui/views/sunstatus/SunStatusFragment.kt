@@ -59,7 +59,7 @@ class SunStatusFragment: BaseFragment() {
 
         imgSun = (activity as AppCompatActivity).findViewById(R.id.imgSun)
         Picasso.get()
-            .load(Constants.SUN_URL)
+            .load(Constants.URL_SUN_HMIIC)
             .networkPolicy(NetworkPolicy.NO_CACHE)
             .memoryPolicy(MemoryPolicy.NO_CACHE)
             .centerInside()
