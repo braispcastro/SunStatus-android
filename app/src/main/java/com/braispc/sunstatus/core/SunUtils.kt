@@ -1,21 +1,15 @@
 package com.braispc.sunstatus.core
 
-import SunModel
-import android.annotation.SuppressLint
+import com.braispc.sunstatus.model.SunModel
 import com.braispc.sunstatus.model.SunDTO
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
-import org.joda.time.LocalDateTime
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.ISODateTimeFormat
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.ParseException
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 
 class SunUtils {
@@ -45,8 +39,8 @@ class SunUtils {
     }
 
     private fun parseSunriseAndSunset(sunModel: SunModel?): SunDTO {
-        var nextSunrise = ""
-        var nextSunset = ""
+        lateinit var nextSunrise: DateTime
+        lateinit var nextSunset: DateTime
 
         val today = sunModel?.features?.get(0)?.properties?.days?.get(0)?.variables?.get(0)
         val tomorrow = sunModel?.features?.get(0)?.properties?.days?.get(1)?.variables?.get(0)
@@ -57,13 +51,16 @@ class SunUtils {
             val tomorrowSunrise = DateTime.parse(tomorrow?.sunrise)
             val tomorrowSunset = DateTime.parse(tomorrow?.sunset)
 
-            nextSunrise = if (DateTime.now() > todaySunrise) tomorrowSunrise.toString("yyyy-MM-dd HH:mm") else todaySunrise.toString("yyyy-MM-dd HH:mm")
-            nextSunset = if (DateTime.now() > todaySunset) tomorrowSunset.toString("yyyy-MM-dd HH:mm") else todaySunset.toString("yyyy-MM-dd HH:mm")
+            nextSunrise = if (DateTime.now() > todaySunrise) tomorrowSunrise else todaySunrise
+            nextSunset = if (DateTime.now() > todaySunset) tomorrowSunset else todaySunset
         }
         catch (e: ParseException) {
             e.printStackTrace()
         }
 
-        return SunDTO(nextSunrise, nextSunset)
+        return if (nextSunset > nextSunrise)
+            SunDTO(nextSunrise.toString("yyyy-MM-dd HH:mm"), nextSunset.toString("yyyy-MM-dd HH:mm"), true)
+        else
+            SunDTO(nextSunset.toString("yyyy-MM-dd HH:mm"), nextSunrise.toString("yyyy-MM-dd HH:mm"), false)
     }
 }

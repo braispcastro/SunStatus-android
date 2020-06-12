@@ -101,13 +101,13 @@
             android:background="#000000">
 
             <ImageView
-                android:id="@+id/imgSunrise"
+                android:id="@+id/imgSunFirst"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_sunrise"/>
 
             <TextView
-                android:id="@+id/tvSunrise"
+                android:id="@+id/tvSunFirst"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -117,13 +117,13 @@
                 android:textColor="#FFFFFF"/>
 
             <ImageView
-                android:id="@+id/imgSunset"
+                android:id="@+id/imgSunSecond"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_sunset"/>
 
             <TextView
-                android:id="@+id/tvSunset"
+                android:id="@+id/tvSunSecond"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
