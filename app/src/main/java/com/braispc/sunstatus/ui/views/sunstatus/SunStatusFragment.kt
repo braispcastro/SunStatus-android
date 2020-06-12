@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.navGraphViewModels
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.braispc.sunstatus.R
 import com.braispc.sunstatus.common.Constants
 import com.braispc.sunstatus.common.Constants.Companion.GPS_REQUEST
@@ -33,6 +34,7 @@ class SunStatusFragment: BaseFragment() {
         fun newInstance() = SunStatusFragment()
     }
 
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var imgSun: ImageView
     private lateinit var binding: SunStatusFragmentBinding
     private val viewModel: SunStatusViewModel by navGraphViewModels(R.id.sunStatusFragment)
@@ -48,6 +50,12 @@ class SunStatusFragment: BaseFragment() {
                 isGPSEnabled = isGPSEnable
             }
         })
+
+        swipeToRefresh = (activity as AppCompatActivity).findViewById(R.id.swipeToRefresh)
+        swipeToRefresh.setOnRefreshListener {
+            invokeLocationAction()
+            swipeToRefresh.isRefreshing = false
+        }
 
         imgSun = (activity as AppCompatActivity).findViewById(R.id.imgSun)
         Picasso.get()
@@ -66,7 +74,7 @@ class SunStatusFragment: BaseFragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.sun_status_fragment, container, false)
 
-        // com.braispc.sunstatus.model.Properties
+        //Properties
 
         viewModel.locationText.observe(viewLifecycleOwner, Observer { x ->
             binding.tvLocation.text = x
@@ -95,8 +103,6 @@ class SunStatusFragment: BaseFragment() {
         viewModel.sunSecondImage.observe(viewLifecycleOwner, Observer { x ->
             binding.imgSunSecond.setDrawableName(x)
         })
-
-        binding.imgSun.setOnClickListener { invokeLocationAction() }
 
         return binding.root
     }
